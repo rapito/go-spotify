@@ -83,9 +83,13 @@ func (spotify *Spotify) Authorize() (bool, []error) {
 
 // Creates a new GET Request to Spotify and returns
 // the response as a map[string]interface{}.
+//
 // format: target endpoint format like "albums/%s" - string
+//
 // data: content to be sent with the request - map[string]interface{}
+//
 // args: Arguments to be used based on format
+//
 // Usage: spotify.Get("albums/%s",nil,0sNOF9WDwhWunNAHPD3Baj)
 func (spotify *Spotify) Get(format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
 	return spotify.Request("GET", format, data, args...)
@@ -93,10 +97,14 @@ func (spotify *Spotify) Get(format string, data map[string]interface{}, args ...
 
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
+//
 // Creates a new POST Request to Spotify and returns
 // the response as a map[string]interface{}.
+//
 // format: target endpoint format like "users/%s/playlists" - string
+//
 // data: content to be sent with the request - map[string]interface{}
+//
 // args: Arguments to be used based on format
 //
 // Usage: spotify.Post("users/%s/playlists",map[string]interface{},"wizzler")
@@ -106,10 +114,14 @@ func (spotify *Spotify) Post(format string, data map[string]interface{}, args ..
 
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
+//
 // Creates a new PUT Request to Spotify and returns
 // the response as a map[string]interface{}.
+//
 // format: target endpoint format like "me/tracks?ids=%s" - string
+//
 // data: content to be sent with the request - map[string]interface{}
+//
 // args: Arguments to be used based on format
 //
 // Usage: spotify.Put("me/tracks?ids=%s",nil,"4iV5W9uYEdYUVa79Axb7Rh")
@@ -119,9 +131,12 @@ func (spotify *Spotify) Put(format string, data map[string]interface{}, args ...
 
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
+//
 // Creates a new DELETE Request to Spotify and returns
 // the response as a map[string]interface{}.
+//
 // format: target endpoint format like "me/tracks?ids=%s" - string
+//
 // args: Arguments to be used based on format
 //
 // Usage: spotify.Delete("me/tracks?ids=%s","4iV5W9uYEdYUVa79Axb7Rh")
@@ -131,10 +146,15 @@ func (spotify *Spotify) Delete(format string, args ...interface{}) ([]byte, []er
 
 // Creates a new Request to Spotify and returns
 // the response as a map[string]interface{}.
+//
 // method: GET/POST/PUT/DELETE - string
+//
 // format: target endpoint format like "albums/%s" - string
+//
 // data: content to be sent with the request - map[string]interface{}
+//
 // args: Arguments to be used based on format
+//
 // Usage: spotify.request("GET","albums/%s",nil,"0sNOF9WDwhWunNAHPD3Baj")
 func (spotify *Spotify) Request(method, format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
 
