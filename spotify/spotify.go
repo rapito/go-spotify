@@ -91,10 +91,8 @@ func (spotify *Spotify) Get(format string, data map[string]interface{}, args ...
 	return spotify.Request("GET", format, data, args...)
 }
 
-// ====================================================
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
-// ====================================================
 // Creates a new POST Request to Spotify and returns
 // the response as a map[string]interface{}.
 // format: target endpoint format like "users/%s/playlists" - string
@@ -106,10 +104,8 @@ func (spotify *Spotify) Post(format string, data map[string]interface{}, args ..
 	return spotify.Request("POST", format, data, args...)
 }
 
-// ====================================================
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
-// ====================================================
 // Creates a new PUT Request to Spotify and returns
 // the response as a map[string]interface{}.
 // format: target endpoint format like "me/tracks?ids=%s" - string
@@ -121,10 +117,8 @@ func (spotify *Spotify) Put(format string, data map[string]interface{}, args ...
 	return spotify.Request("PUT", format, data, args...)
 }
 
-// ====================================================
 // This version does not support User Authentication so
 // POST/PUT/DELETE Request won't work.
-// ====================================================
 // Creates a new DELETE Request to Spotify and returns
 // the response as a map[string]interface{}.
 // format: target endpoint format like "me/tracks?ids=%s" - string
