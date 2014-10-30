@@ -9,6 +9,7 @@ import (
 	"github.com/parnurzeal/gorequest"
 	"encoding/base64"
 	"fmt"
+	"errors"
 )
 
 // Spotify struct which we use
@@ -166,7 +167,33 @@ func (spotify *Spotify) Request(method, format string, data map[string]interface
 
 	_, body, errs := request.End()
 
-	return []byte(body), errs
+	result := []byte(body)
+	if unauthorizedResponse(result) {
+		result = nil
+		errs = []error{
+			errors.New("Authorization Error. Make sure you called Spotify.Authorize() method!"),
+			errors.New(body) }
+	}
+
+	return result, errs
+}
+
+// Checks for the response content to see if we
+// received a not authorized error.
+func unauthorizedResponse(body []byte) bool {
+
+	// Parse response to simplejson object
+	js, err := simplejson.NewJson(body)
+	if err != nil {
+		fmt.Println("[unauthorizedResponse] Error parsing Json!")
+		return true
+	}
+
+	// check whether we got an error or not.
+	_, exists := js.CheckGet("error")
+	if exists { return true }
+
+	return false
 }
 
 // Creates target URL for making a Spotify Request

@@ -10,8 +10,6 @@ import (
 const (
 	clientID     = "756100c43d724ae6b791f7804c82b219"
 	clientSecret = "841a197013f847bca78c01b3b69fc72d"
-	redirectURI  = "http://localhost/callback"
-
 )
 
 var spotify = New(clientID, clientSecret)
@@ -56,9 +54,16 @@ func TestGet(t *testing.T) {
 // Should create a new Spotify Object.
 func TestGetEncodedKeys(t *testing.T) {
 
-
 	result := spotify.getEncodedKeys();
 	assert.T(t, len(result) > 0, "shouldn't be null")
+
+}
+
+// Should create a new Spotify Object.
+func TestUnauthorizedResponse(t *testing.T) {
+
+	result := unauthorizedResponse([]byte(`"{error: {	status: 401, message: "Notoken provided"}}"`))
+	assert.T(t, result, "should be true")
 
 }
 
