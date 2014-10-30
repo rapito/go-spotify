@@ -86,12 +86,11 @@ func (spotify *Spotify) Authorize() (bool, []error) {
 // url: target endpoint like "albums" - string
 // data: content to be sent with the request
 // Usage: spotify.request("GET","albums/%s",nil,0sNOF9WDwhWunNAHPD3Baj)
-func (spotify *Spotify) Request(method, endpoint string, data map[string]interface{}, args... interface{}) ([]byte, []error) {
+func (spotify *Spotify) Request(method, endpoint string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
 
 	// create endpoint based on passed format
-	endpoint = fmt.Sprintf(endpoint, args)
+	endpoint = fmt.Sprintf(endpoint, args...)
 
-	jsonData, _ := getJsonBytesFromMap(data)
 	targetURL := spotify.createTargetURL(endpoint)
 
 	request := gorequest.New()
@@ -101,14 +100,12 @@ func (spotify *Spotify) Request(method, endpoint string, data map[string]interfa
 	if method == "PUT" { request.Put(targetURL) }
 	if method == "DELETE" { request.Delete(targetURL) }
 
-
-
-	if jsonData != nil && data != nil {
-		request.Send(string(jsonData))
+	if data != nil {
+		jsonData, _ := getJsonBytesFromMap(data)
+		if jsonData != nil { request.Send(string(jsonData)) }
 	}
 
 	_, body, errs := request.End()
-
 
 	return []byte(body), errs
 }
