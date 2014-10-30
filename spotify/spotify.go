@@ -4,7 +4,7 @@
 package spotify
 
 import (
-	//	"encoding/json"
+	"encoding/json"
 	simplejson "github.com/bitly/go-simplejson"
 	"github.com/parnurzeal/gorequest"
 	"encoding/base64"
@@ -21,8 +21,9 @@ type Spotify struct {
 }
 
 const (
-	//	baseURL     = "https://api.spotify.com"
-	accountsURL = "https://accounts.spotify.com/api/token"
+	BASE_URL     = "https://api.spotify.com"
+	ACCOUNTS_URL = "https://accounts.spotify.com/api/token"
+	API_VERSION  = "v1"
 )
 
 // Creates a New Spotify API object with the
@@ -31,20 +32,11 @@ const (
 // 	spotify.New("XXX","YYY")
 func New(clientID, clientSecret string) Spotify {
 
-	return createSpotify(clientID, clientSecret)
+	return initialize(clientID, clientSecret)
 }
 
-//
-//// Creates a New Spotify API object with the
-//// clientID, clientSecret and redirectURI
-//// Usage:
-//// 	spotify.New("XXX","YYY", "http://ZZZ")
-//func New(clientID, clientSecret, redirectURI string) Spotify {
-//
-//	return createSpotify(clientID, clientSecret, redirectURI)
-//}
 
-func createSpotify(clientID, clientSecret string) Spotify {
+func initialize(clientID, clientSecret string) Spotify {
 	shop := Spotify{clientID: clientID, clientSecret: clientSecret}
 	return shop
 }
@@ -54,23 +46,29 @@ func (spotify *Spotify) Authorize() (bool, []error) {
 
 	result := false
 
-	request := gorequest.New()
-	request.Post(accountsURL)
+	// Get Encoded Access Keys for Authentication
 	auth := fmt.Sprintf("Basic %s", spotify.getEncodedKeys())
+
+	// create a new request to get our access_token
+	// and send our Keys on Authorization Header
+	request := gorequest.New()
+	request.Post(ACCOUNTS_URL)
 	request.Set("Authorization", auth)
 	request.Send("grant_type=client_credentials")
 
 	_, body, errs := request.End()
 
+	// Parse response to simplejson object
 	js, err := simplejson.NewJson([]byte(body))
 	if err != nil {
 		fmt.Println("[Authorize] Error parsing Json!")
 		errs = []error{err}
 	}
 
+	// check whether we got the access_token or not.
 	jsToken, exists := js.CheckGet("access_token")
-
 	if exists {
+		// If we got it then assign it to the spotify object.
 		spotify.accessToken, err = jsToken.String()
 		if err != nil {
 			fmt.Println("[Authorize] Error Getting Access Token from Json!")
@@ -82,6 +80,47 @@ func (spotify *Spotify) Authorize() (bool, []error) {
 	return result, errs
 }
 
+// Creates a new Request to Spotify and returns
+// the response as a map[string]interface{}.
+// method: GET/POST/PUT - string
+// url: target endpoint like "albums" - string
+// data: content to be sent with the request
+// Usage: spotify.request("GET","albums/%s",nil,0sNOF9WDwhWunNAHPD3Baj)
+func (spotify *Spotify) Request(method, endpoint string, data map[string]interface{}, args... interface{}) ([]byte, []error) {
+
+	// create endpoint based on passed format
+	endpoint = fmt.Sprintf(endpoint, args)
+
+	jsonData, _ := getJsonBytesFromMap(data)
+	targetURL := spotify.createTargetURL(endpoint)
+
+	request := gorequest.New()
+
+	if method == "GET" { request.Get(targetURL) }
+	if method == "POST" { request.Post(targetURL) }
+	if method == "PUT" { request.Put(targetURL) }
+	if method == "DELETE" { request.Delete(targetURL) }
+
+
+
+	if jsonData != nil && data != nil {
+		request.Send(string(jsonData))
+	}
+
+	_, body, errs := request.End()
+
+
+	return []byte(body), errs
+}
+
+// Creates target URL for making a Spotify Request
+// to a given endpoint
+func (spotify *Spotify) createTargetURL(endpoint string) string {
+	result := fmt.Sprintf("%s/%s/%s", BASE_URL, API_VERSION, endpoint)
+	fmt.Println(result)
+	return result
+}
+
 // returns base64 encoded authorization
 // Keys for Spotify.
 func (spotify *Spotify) getEncodedKeys() string {
@@ -90,4 +129,16 @@ func (spotify *Spotify) getEncodedKeys() string {
 	encoded := base64.StdEncoding.EncodeToString([]byte(data))
 
 	return encoded;
+}
+
+// Extracts Json Bytes from map[string]interface
+func getJsonBytesFromMap(data map[string]interface{}) ([]byte, error) {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		fmt.Println("Invalid data object, can't parse to json:")
+		fmt.Println("Error:", err)
+		fmt.Println("Data:", data)
+		return nil, err
+	}
+	return jsonData, nil
 }

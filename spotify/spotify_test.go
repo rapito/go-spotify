@@ -43,3 +43,12 @@ func TestGetEncodedKeys(t *testing.T) {
 
 }
 
+// Should create a new Spotify Object.
+func TestCreateTargetURL(t *testing.T) {
+
+
+	result := spotify.createTargetURL("albums");
+	assert.T(t, result == "https://api.spotify.com/v1/albums", "shouldn be same URL")
+
+}
+
