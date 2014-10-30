@@ -80,26 +80,85 @@ func (spotify *Spotify) Authorize() (bool, []error) {
 	return result, errs
 }
 
+// Creates a new GET Request to Spotify and returns
+// the response as a map[string]interface{}.
+// format: target endpoint format like "albums/%s" - string
+// data: content to be sent with the request - map[string]interface{}
+// args: Arguments to be used based on format
+// Usage: spotify.Get("albums/%s",nil,0sNOF9WDwhWunNAHPD3Baj)
+func (spotify *Spotify) Get(format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
+	return spotify.Request("GET", format, data, args...)
+}
+
+// ====================================================
+// This version does not support User Authentication so
+// POST/PUT/DELETE Request won't work.
+// ====================================================
+// Creates a new POST Request to Spotify and returns
+// the response as a map[string]interface{}.
+// format: target endpoint format like "users/%s/playlists" - string
+// data: content to be sent with the request - map[string]interface{}
+// args: Arguments to be used based on format
+//
+// Usage: spotify.Post("users/%s/playlists",map[string]interface{},"wizzler")
+func (spotify *Spotify) Post(format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
+	return spotify.Request("POST", format, data, args...)
+}
+
+// ====================================================
+// This version does not support User Authentication so
+// POST/PUT/DELETE Request won't work.
+// ====================================================
+// Creates a new PUT Request to Spotify and returns
+// the response as a map[string]interface{}.
+// format: target endpoint format like "me/tracks?ids=%s" - string
+// data: content to be sent with the request - map[string]interface{}
+// args: Arguments to be used based on format
+//
+// Usage: spotify.Put("me/tracks?ids=%s",nil,"4iV5W9uYEdYUVa79Axb7Rh")
+func (spotify *Spotify) Put(format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
+	return spotify.Request("PUT", format, data, args...)
+}
+
+// ====================================================
+// This version does not support User Authentication so
+// POST/PUT/DELETE Request won't work.
+// ====================================================
+// Creates a new DELETE Request to Spotify and returns
+// the response as a map[string]interface{}.
+// format: target endpoint format like "me/tracks?ids=%s" - string
+// args: Arguments to be used based on format
+//
+// Usage: spotify.Delete("me/tracks?ids=%s","4iV5W9uYEdYUVa79Axb7Rh")
+func (spotify *Spotify) Delete(format string, args ...interface{}) ([]byte, []error) {
+	return spotify.Request("DELETE", format, nil, args...)
+}
+
 // Creates a new Request to Spotify and returns
 // the response as a map[string]interface{}.
-// method: GET/POST/PUT - string
-// url: target endpoint like "albums" - string
-// data: content to be sent with the request
-// Usage: spotify.request("GET","albums/%s",nil,0sNOF9WDwhWunNAHPD3Baj)
-func (spotify *Spotify) Request(method, endpoint string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
+// method: GET/POST/PUT/DELETE - string
+// format: target endpoint format like "albums/%s" - string
+// data: content to be sent with the request - map[string]interface{}
+// args: Arguments to be used based on format
+// Usage: spotify.request("GET","albums/%s",nil,"0sNOF9WDwhWunNAHPD3Baj")
+func (spotify *Spotify) Request(method, format string, data map[string]interface{}, args ...interface{}) ([]byte, []error) {
 
 	// create endpoint based on passed format
-	endpoint = fmt.Sprintf(endpoint, args...)
+	endpoint := fmt.Sprintf(format, args...)
 
 	targetURL := spotify.createTargetURL(endpoint)
 
 	request := gorequest.New()
 
+	// Check method type to call corresponding
+	// go-request method
 	if method == "GET" { request.Get(targetURL) }
 	if method == "POST" { request.Post(targetURL) }
 	if method == "PUT" { request.Put(targetURL) }
 	if method == "DELETE" { request.Delete(targetURL) }
 
+	// Add the data to the request if it
+	// isn't null
 	if data != nil {
 		jsonData, _ := getJsonBytesFromMap(data)
 		if jsonData != nil { request.Send(string(jsonData)) }
@@ -114,7 +173,6 @@ func (spotify *Spotify) Request(method, endpoint string, data map[string]interfa
 // to a given endpoint
 func (spotify *Spotify) createTargetURL(endpoint string) string {
 	result := fmt.Sprintf("%s/%s/%s", BASE_URL, API_VERSION, endpoint)
-	fmt.Println(result)
 	return result
 }
 

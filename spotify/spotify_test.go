@@ -45,6 +45,15 @@ func TestRequest(t *testing.T) {
 }
 
 // Should create a new Spotify Object.
+func TestGet(t *testing.T) {
+
+	result, err := spotify.Get("albums/%s", nil, "0sNOF9WDwhWunNAHPD3Baj")
+	assert.T(t, result != nil, "Shouldnt be null")
+	assert.T(t, err == nil, "Should be null")
+
+}
+
+// Should create a new Spotify Object.
 func TestGetEncodedKeys(t *testing.T) {
 
 
