@@ -9,7 +9,7 @@ import (
 //	"github.com/parnurzeal/gorequest"
 )
 
-// Spotify store struct which we use
+// Spotify struct which we use
 // to wrap our request operations.
 type Spotify struct {
 	clientID        string
