@@ -8,8 +8,8 @@ import (
 
 // Create out api variables for easy access
 const (
-	clientID     = "756100c43d724ae6b791f7804c82b219"
-	clientSecret = "841a197013f847bca78c01b3b69fc72d"
+	clientID     = "your-clientID-here"
+	clientSecret = "your-client-secret-here"
 )
 
 var spotify = New(clientID, clientSecret)
