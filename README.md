@@ -1,7 +1,7 @@
 go-spotify
 ==========
 
-[![GoDoc](https://godoc.org/github.com/rapito/go-spotify/spotify?status.svg)](https://godoc.org/github.com/rapito/go-spotify/spotify)
+[![GoDoc](https://godoc.org/github.com/rapito/go-spotify/spotify?status.svg)](https://godoc.org/github.com/rapito/go-spotify/spotify)  [![baby-gopher](https://raw.github.com/drnic/babygopher-site/gh-pages/images/babygopher-logo-small.png)](http://www.babygopher.org)
 
 Simple Go library for the Spotify Web API
 
