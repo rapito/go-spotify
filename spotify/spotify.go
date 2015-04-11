@@ -38,8 +38,8 @@ func New(clientID, clientSecret string) Spotify {
 
 
 func initialize(clientID, clientSecret string) Spotify {
-	shop := Spotify{clientID: clientID, clientSecret: clientSecret}
-	return shop
+	spot := Spotify{clientID: clientID, clientSecret: clientSecret}
+	return spot
 }
 
 // Authorizes your application against Spotify
