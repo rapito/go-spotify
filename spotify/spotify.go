@@ -4,21 +4,21 @@
 package spotify
 
 import (
+	"encoding/base64"
 	"encoding/json"
+	"errors"
+	"fmt"
 	simplejson "github.com/bitly/go-simplejson"
 	"github.com/parnurzeal/gorequest"
-	"encoding/base64"
-	"fmt"
-	"errors"
 )
 
 // Spotify struct which we use
 // to wrap our request operations.
 type Spotify struct {
-	clientID           string
-	clientSecret       string
+	clientID     string
+	clientSecret string
 	//	redirectURI        string
-	accessToken        string
+	accessToken string
 }
 
 const (
@@ -36,10 +36,9 @@ func New(clientID, clientSecret string) Spotify {
 	return initialize(clientID, clientSecret)
 }
 
-
 func initialize(clientID, clientSecret string) Spotify {
-	shop := Spotify{clientID: clientID, clientSecret: clientSecret}
-	return shop
+	spot := Spotify{clientID: clientID, clientSecret: clientSecret}
+	return spot
 }
 
 // Authorizes your application against Spotify
@@ -172,16 +171,26 @@ func (spotify *Spotify) Request(method, format string, data map[string]interface
 
 	// Check method type to call corresponding
 	// go-request method
-	if method == "GET" { request.Get(targetURL) }
-	if method == "POST" { request.Post(targetURL) }
-	if method == "PUT" { request.Put(targetURL) }
-	if method == "DELETE" { request.Delete(targetURL) }
+	if method == "GET" {
+		request.Get(targetURL)
+	}
+	if method == "POST" {
+		request.Post(targetURL)
+	}
+	if method == "PUT" {
+		request.Put(targetURL)
+	}
+	if method == "DELETE" {
+		request.Delete(targetURL)
+	}
 
 	// Add the data to the request if it
 	// isn't null
 	if data != nil {
 		jsonData, _ := getJsonBytesFromMap(data)
-		if jsonData != nil { request.Send(string(jsonData)) }
+		if jsonData != nil {
+			request.Send(string(jsonData))
+		}
 	}
 
 	_, body, errs := request.End()
@@ -191,7 +200,7 @@ func (spotify *Spotify) Request(method, format string, data map[string]interface
 		result = nil
 		errs = []error{
 			errors.New("Authorization Error. Make sure you called Spotify.Authorize() method!"),
-			errors.New(body) }
+			errors.New(body)}
 	}
 
 	return result, errs
@@ -210,7 +219,9 @@ func unauthorizedResponse(body []byte) bool {
 
 	// check whether we got an error or not.
 	_, exists := js.CheckGet("error")
-	if exists { return true }
+	if exists {
+		return true
+	}
 
 	return false
 }
@@ -229,7 +240,7 @@ func (spotify *Spotify) getEncodedKeys() string {
 	data := fmt.Sprintf("%v:%v", spotify.clientID, spotify.clientSecret)
 	encoded := base64.StdEncoding.EncodeToString([]byte(data))
 
-	return encoded;
+	return encoded
 }
 
 // Extracts Json Bytes from map[string]interface

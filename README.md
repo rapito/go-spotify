@@ -9,7 +9,7 @@ Simple Go library for the Spotify Web API
 Installation
 ------------
 ```
-go get github.com/rapito/go-spotify
+go get github.com/rapito/go-spotify/spotify
 ```
 
 How-to-use
