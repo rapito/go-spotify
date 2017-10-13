@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	simplejson "github.com/bitly/go-simplejson"
 	"github.com/parnurzeal/gorequest"
 )
@@ -183,6 +184,8 @@ func (spotify *Spotify) Request(method, format string, data map[string]interface
 	if method == "DELETE" {
 		request.Delete(targetURL)
 	}
+
+	request.Set("Authorization", fmt.Sprintf("Bearer %s", spotify.accessToken))
 
 	// Add the data to the request if it
 	// isn't null
