@@ -55,6 +55,10 @@ track endpoint...
 To see which endpoints you have access to, check out spotify web-api 
 [documentation.](https://developer.spotify.com/web-api/)
 
+Buy me a Drink
+-------------
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/donate?hosted_button_id=FFC6KNAX9SKZU)
+
 Links
 -----
 
