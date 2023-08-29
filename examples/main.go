@@ -2,15 +2,23 @@
 package main
 
 import (
-	"github.com/rapito/go-spotify/spotify"
-	simplejson "github.com/bitly/go-simplejson"
 	"fmt"
+
+	simplejson "github.com/bitly/go-simplejson"
+	"github.com/rapito/go-spotify/spotify"
+	"github.com/spf13/viper"
 )
 
 func main() {
 
 	// Create a new spotify object
-	spot := spotify.New("756100c43d724ae6b791f7804c82b219", "841a197013f847bca78c01b3b69fc72d")
+
+	// Make .env file variables accessible in file
+	viper.SetConfigFile(".env")
+	viper.ReadInConfig()
+	viper.AutomaticEnv()
+
+	spot := spotify.New(viper.GetString("CLIENT_ID"), viper.GetString("CLIENT_SECRET"))
 
 	// Authorize against Spotify first
 	authorized, _ := spot.Authorize()
